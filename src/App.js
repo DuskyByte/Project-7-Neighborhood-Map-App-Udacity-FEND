@@ -3,12 +3,16 @@ import GoogleMaps from './GoogleMaps.js'
 import './App.css'
 
 const APIKey = 'AIzaSyCWZIi6c-usMI7VtXVz_oo17ru-498r3IM'
+const neighborhood = 'Rockwood, Gresham, OR'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <GoogleMaps APIKey={APIKey} />
+        <GoogleMaps 
+          APIKey={APIKey}
+          neighborhood={neighborhood}
+        />
       </div>
     )
   }
