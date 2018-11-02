@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import Menu from './Menu.js'
 import './App.css'
 
 class GoogleMaps extends Component {
@@ -33,28 +35,133 @@ class GoogleMaps extends Component {
       }, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
           const mapOptions = {
-            zoom: 14,
-            center: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng())
+            zoom: 15,
+            center: results[0].geometry.location,
+            styles: [
+              {
+                "featureType": "all",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                  "color": "#778877"
+                }
+                ]
+              },
+              {
+                "featureType": "all",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                  "gamma": 0.01
+                },
+                {
+                  "lightness": 20
+                }
+                ]
+              },
+              {
+                "featureType": "all",
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                {
+                  "saturation": -31
+                },
+                {
+                  "lightness": -33
+                },
+                {
+                  "weight": 2
+                },
+                {
+                  "gamma": 0.8
+                }
+                ]
+              },
+              {
+                "featureType": "all",
+                "elementType": "labels.icon",
+                "stylers": [
+                {
+                  "visibility": "off"
+                }
+                ]
+              },
+              {
+                "featureType": "landscape",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                  "lightness": 75
+                },
+                {
+                  "saturation": 30
+                }
+                ]
+              },
+              {
+                "featureType": "poi",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                  "saturation": 20
+                }
+                ]
+              },
+              {
+                "featureType": "poi.park",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                  "lightness": 20
+                },
+                {
+                  "saturation": -20
+                }
+                ]
+              },
+              {
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                  "lightness": 10
+                },
+                {
+                  "saturation": -30
+                }
+                ]
+              },
+              {
+                "featureType": "road",
+                "elementType": "geometry.stroke",
+                "stylers": [
+                {
+                  "saturation": 25
+                },
+                {
+                  "lightness": 25
+                }
+                ]
+              },
+              {
+                "featureType": "water",
+                "elementType": "all",
+                "stylers": [
+                {
+                  "lightness": -20
+                }
+                ]
+              }
+            ],
+            disableDefaultUI: true,
+            gestureHandling: "none"
           }
           const map = new google.maps.Map(
             document.getElementById('map'), mapOptions)
-          const rectangle = new google.maps.Rectangle({
-            strokeColor: '#000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            map: map,
-            bounds: {
-              north: results[0].geometry.bounds.l.j,
-              south: results[0].geometry.bounds.l.l,
-              east: results[0].geometry.bounds.j.l,
-              west: results[0].geometry.bounds.j.j
-            }
-          })
           const placeService = new google.maps.places.PlacesService(map)
           placeService.nearbySearch({
-            location: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()),         
-            radius: 2000,
-            types: ['bar']
+            bounds: results[0].geometry.bounds,
+            types: ['restaurant']
           }, function (results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
               results.forEach(function (place) {
@@ -71,17 +178,36 @@ class GoogleMaps extends Component {
               })
             }
           })
-          return rectangle
+          const controlUI = document.createElement('div')
+          controlUI.style.backgroundColor = '#fff'
+          controlUI.style.border = '2px solid #fff'
+          controlUI.style.marginBottom = '22px'
+          controlUI.style.textAlign = 'center'
+          controlUI.title = 'Click to show/hide menu'
+          const controlText = document.createElement('div')
+          controlText.style.color = '#222'
+          controlText.style.fontSize = '16px'
+          controlText.style.lineHeight = '38px'
+          controlText.style.cursor = 'pointer'
+          controlText.style.paddingLeft = '5px'
+          controlText.style.paddingRight = '5px'
+          controlText.innerHTML = 'Menu'
+          controlUI.appendChild(controlText)
+          map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlUI)
+          controlUI.addEventListener('click', function() {
+            ReactDOM.render(<Menu/>, controlText)
+          })
         }
       })
     })
-  }
+}
 
-  render() {
-    return (
-      <div id="map"></div>
+render() {
+  return (
+    <div id="map">
+    </div>
     )
-  }
+}
 }
 
 export default GoogleMaps
