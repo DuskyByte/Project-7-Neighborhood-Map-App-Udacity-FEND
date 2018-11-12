@@ -157,13 +157,16 @@ class GoogleMaps extends Component {
             gestureHandling: "none"
           }
           const map = new google.maps.Map(
-            document.getElementById('map'), mapOptions)
+            document.getElementById('map'), mapOptions
+          )
+          let restaurantResults
           const placeService = new google.maps.places.PlacesService(map)
           placeService.nearbySearch({
             bounds: results[0].geometry.bounds,
             types: ['restaurant']
           }, function (results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
+              restaurantResults = results
               results.forEach(function (place) {
                 let marker = new google.maps.Marker({
                   position: place.geometry.location,
@@ -179,35 +182,33 @@ class GoogleMaps extends Component {
             }
           })
           const controlUI = document.createElement('div')
-          controlUI.style.backgroundColor = '#fff'
-          controlUI.style.border = '2px solid #fff'
-          controlUI.style.marginBottom = '22px'
-          controlUI.style.textAlign = 'center'
-          controlUI.title = 'Click to show/hide menu'
-          const controlText = document.createElement('div')
-          controlText.style.color = '#222'
-          controlText.style.fontSize = '16px'
-          controlText.style.lineHeight = '38px'
-          controlText.style.cursor = 'pointer'
-          controlText.style.paddingLeft = '5px'
-          controlText.style.paddingRight = '5px'
-          controlText.innerHTML = 'Menu'
-          controlUI.appendChild(controlText)
+          controlUI.innerHTML = 'Menu'
+          controlUI.classList.add('menu')
           map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlUI)
-          controlUI.addEventListener('click', function() {
-            ReactDOM.render(<Menu/>, controlText)
+          let showMenu = false;
+          controlUI.addEventListener('click', function(event) {
+            if (showMenu) {
+              if (event.target === document.getElementsByClassName('button')[0]) {
+                showMenu = false
+                ReactDOM.unmountComponentAtNode(controlUI)
+                controlUI.innerHTML = 'Menu'
+              }
+            } else {
+              showMenu = true
+              ReactDOM.render(<Menu results={restaurantResults} />, controlUI)
+            }
           })
         }
       })
     })
-}
+  }
 
-render() {
-  return (
-    <div id="map">
-    </div>
+  render() {
+    return (
+      <div id="map">
+      </div>
     )
-}
+  }
 }
 
 export default GoogleMaps

@@ -2,6 +2,33 @@
   text-align: center;
 }
 
+.menu {
+	background-color: #fff;
+	border: 2px solid #000;
+	color: #222;
+	font-size: 16px;
+	line-height: 38px;
+	cursor: pointer !important;
+	padding: 5px;
+	margin: 26px 0px 26px 26px;
+}
+
+.menu-scroll {
+	height: calc(100vh - 123px);
+	overflow-y: scroll;
+}
+
+.button {
+	background-color: #fff;
+	border: 2px solid #000;
+	color: #222;
+	font-size: 16px;
+	line-height: 38px;
+	cursor: pointer !important;
+	padding: 5px;
+	margin: 0px 0px 5px;
+}
+
 #map {
   position: absolute;
   height: 100%;
