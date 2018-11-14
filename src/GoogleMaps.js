@@ -198,35 +198,44 @@ class GoogleMaps extends Component {
             }
           })
 
-          //Fills the Infowindow with the needed info
+          //Fills the Infowindow with infomation
           function fillInfowindow(marker, infowindow) {
             if (infowindow.marker !== marker) {
               infowindow.marker = marker
               const window = document.createElement('div')
               infowindow.setContent(window)
               let place = restaurantResults[markers.findIndex(index => index === marker)]
-              ReactDOM.render(<Restaurant name={place.name} />, window)
+              ReactDOM.render(
+                <Restaurant
+                  photo={place.photos[0].getUrl()}
+                  name={place.name}
+                  vicinity={place.vicinity}
+                  open_now={place.opening_hours.open_now}
+                />,
+              window)
+              map.panTo(marker.position)
               infowindow.open(map, marker)
               infowindow.addListener('closeclick', function() {
+                map.panTo(results[0].geometry.location)
                 infowindow.close()
               })
             }
           }
 
-          //Creats custom UI menu on map
+          //Creates custom UI menu on map
           const controlUI = document.createElement('div')
           controlUI.innerHTML = 'Menu'
           controlUI.classList.add('menu')
           map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlUI)
           let showMenu = false;
           controlUI.addEventListener('click', function(event) {
-
+            //Test if menu is open and responds accordingly
             if (showMenu) {
               if (event.target === document.getElementsByClassName('button')[0]) {
                 showMenu = false
                 ReactDOM.unmountComponentAtNode(controlUI)
                 controlUI.innerHTML = 'Menu'
-              } else {
+              } else if (event.target.parentNode === document.getElementsByClassName('menu-scroll')[0]) {
                 let index = restaurantResults.findIndex(index => index.name === event.target.innerHTML)
                 fillInfowindow(markers[index], largeInfowindow)
               }

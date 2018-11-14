@@ -6,6 +6,12 @@ class Menu extends Component {
     return (
       <div className="Menu">
         <div className="button">Close</div>
+        <div className="drop-down">
+          Filter: <select>
+            <option value="all">All</option>
+            <option value="open">Currently Open</option>
+          </select>
+        </div>
         <div className="menu-scroll">
           {
             this.props.results.map((place) => (

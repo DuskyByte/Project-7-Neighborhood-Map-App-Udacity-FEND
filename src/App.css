@@ -14,7 +14,7 @@
 }
 
 .menu-scroll {
-	height: calc(100vh - 123px);
+	height: calc(100vh - 161px);
 	overflow-y: scroll;
 }
 
@@ -42,6 +42,11 @@
 }
 .place:hover {
     background: #ccc;
+}
+
+.restaurant-image {
+	max-height: 200px;
+	max-width: 623px !important;
 }
 
 #map {
