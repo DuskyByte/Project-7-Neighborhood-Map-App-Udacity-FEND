@@ -9,7 +9,7 @@ class Menu extends Component {
         <div className="menu-scroll">
           {
             this.props.results.map((place) => (
-              <div key={place.id}>
+              <div key={place.id} className="place">
                 {place.name}
               </div>
             ))

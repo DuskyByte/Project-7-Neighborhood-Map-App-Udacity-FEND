@@ -29,6 +29,21 @@
 	margin: 0px 0px 5px;
 }
 
+.hidden {
+	visibility: hidden;
+}
+
+.visible {
+	visibility: visible;
+}
+
+.place {
+    background: #fff;
+}
+.place:hover {
+    background: #ccc;
+}
+
 #map {
   position: absolute;
   height: 100%;

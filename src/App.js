@@ -3,7 +3,7 @@ import GoogleMaps from './GoogleMaps.js'
 import './App.css'
 
 const APIKey = 'AIzaSyCWZIi6c-usMI7VtXVz_oo17ru-498r3IM'
-const neighborhood = 'Rockwood, Gresham, OR'
+const neighborhood = 'Rockwood, Gresham, OR' //Customize your neighborhood
 
 class App extends Component {
   render() {

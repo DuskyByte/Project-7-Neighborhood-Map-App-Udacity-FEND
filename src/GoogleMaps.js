@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import Menu from './Menu.js'
+import Restaurant from './Restaurant.js'
 import './App.css'
+
+let restaurantResults
+let markers = []
 
 class GoogleMaps extends Component {
   loadGoogleMapsAPI() { //Loads the Google Maps API
@@ -37,7 +41,7 @@ class GoogleMaps extends Component {
           const mapOptions = {
             zoom: 15,
             center: results[0].geometry.location,
-            styles: [
+            styles: [ //Custom style for map
               {
                 "featureType": "all",
                 "elementType": "geometry",
@@ -156,18 +160,26 @@ class GoogleMaps extends Component {
             disableDefaultUI: true,
             gestureHandling: "none"
           }
+
+          //Attaches map
           const map = new google.maps.Map(
             document.getElementById('map'), mapOptions
           )
-          let restaurantResults
+
+          //Creates Infowindows
+          const largeInfowindow = new google.maps.InfoWindow()
+
+          //Searches for nearby restaurants
           const placeService = new google.maps.places.PlacesService(map)
           placeService.nearbySearch({
             bounds: results[0].geometry.bounds,
             types: ['restaurant']
           }, function (results, status) {
+            restaurantResults = results
+
+            //Places results on map
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-              restaurantResults = results
-              results.forEach(function (place) {
+              results.forEach(place => {
                 let marker = new google.maps.Marker({
                   position: place.geometry.location,
                   icon: {
@@ -177,21 +189,46 @@ class GoogleMaps extends Component {
                   title: place.name,
                   map: map
                 })
+                markers.push(marker)
+                marker.addListener('click', function () {
+                  fillInfowindow(this, largeInfowindow)
+                })
                 return marker
               })
             }
           })
+
+          //Fills the Infowindow with the needed info
+          function fillInfowindow(marker, infowindow) {
+            if (infowindow.marker !== marker) {
+              infowindow.marker = marker
+              const window = document.createElement('div')
+              infowindow.setContent(window)
+              let place = restaurantResults[markers.findIndex(index => index === marker)]
+              ReactDOM.render(<Restaurant name={place.name} />, window)
+              infowindow.open(map, marker)
+              infowindow.addListener('closeclick', function() {
+                infowindow.close()
+              })
+            }
+          }
+
+          //Creats custom UI menu on map
           const controlUI = document.createElement('div')
           controlUI.innerHTML = 'Menu'
           controlUI.classList.add('menu')
           map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlUI)
           let showMenu = false;
           controlUI.addEventListener('click', function(event) {
+
             if (showMenu) {
               if (event.target === document.getElementsByClassName('button')[0]) {
                 showMenu = false
                 ReactDOM.unmountComponentAtNode(controlUI)
                 controlUI.innerHTML = 'Menu'
+              } else {
+                let index = restaurantResults.findIndex(index => index.name === event.target.innerHTML)
+                fillInfowindow(markers[index], largeInfowindow)
               }
             } else {
               showMenu = true
