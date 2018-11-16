@@ -46,114 +46,114 @@ class GoogleMaps extends Component {
                 "featureType": "all",
                 "elementType": "geometry",
                 "stylers": [
-                {
-                  "color": "#778877"
-                }
+                  {
+                    "color": "#778877"
+                  }
                 ]
               },
               {
                 "featureType": "all",
                 "elementType": "labels.text.fill",
                 "stylers": [
-                {
-                  "gamma": 0.01
-                },
-                {
-                  "lightness": 20
-                }
+                  {
+                    "gamma": 0.01
+                  },
+                  {
+                    "lightness": 20
+                  }
                 ]
               },
               {
                 "featureType": "all",
                 "elementType": "labels.text.stroke",
                 "stylers": [
-                {
-                  "saturation": -31
-                },
-                {
-                  "lightness": -33
-                },
-                {
-                  "weight": 2
-                },
-                {
-                  "gamma": 0.8
-                }
+                  {
+                    "saturation": -31
+                  },
+                  {
+                    "lightness": -33
+                  },
+                  {
+                    "weight": 2
+                  },
+                  {
+                    "gamma": 0.8
+                  }
                 ]
               },
               {
                 "featureType": "all",
                 "elementType": "labels.icon",
                 "stylers": [
-                {
-                  "visibility": "off"
-                }
+                  {
+                    "visibility": "off"
+                  }
                 ]
               },
               {
                 "featureType": "landscape",
                 "elementType": "geometry",
                 "stylers": [
-                {
-                  "lightness": 75
-                },
-                {
-                  "saturation": 30
-                }
+                  {
+                    "lightness": 75
+                  },
+                  {
+                    "saturation": 30
+                  }
                 ]
               },
               {
                 "featureType": "poi",
                 "elementType": "geometry",
                 "stylers": [
-                {
-                  "saturation": 20
-                }
+                  {
+                    "saturation": 20
+                  }
                 ]
               },
               {
                 "featureType": "poi.park",
                 "elementType": "geometry",
                 "stylers": [
-                {
-                  "lightness": 20
-                },
-                {
-                  "saturation": -20
-                }
+                  {
+                    "lightness": 20
+                  },
+                  {
+                    "saturation": -20
+                  }
                 ]
               },
               {
                 "featureType": "road",
                 "elementType": "geometry",
                 "stylers": [
-                {
-                  "lightness": 10
-                },
-                {
-                  "saturation": -30
-                }
+                  {
+                    "lightness": 10
+                  },
+                  {
+                    "saturation": -30
+                  }
                 ]
               },
               {
                 "featureType": "road",
                 "elementType": "geometry.stroke",
                 "stylers": [
-                {
-                  "saturation": 25
-                },
-                {
-                  "lightness": 25
-                }
+                  {
+                    "saturation": 25
+                  },
+                  {
+                    "lightness": 25
+                  }
                 ]
               },
               {
                 "featureType": "water",
                 "elementType": "all",
                 "stylers": [
-                {
-                  "lightness": -20
-                }
+                  {
+                    "lightness": -20
+                  }
                 ]
               }
             ],
@@ -167,7 +167,7 @@ class GoogleMaps extends Component {
           )
 
           //Creates Infowindows
-          const largeInfowindow = new google.maps.InfoWindow()
+          let largeInfowindow = new google.maps.InfoWindow()
 
           //Searches for nearby restaurants
           const placeService = new google.maps.places.PlacesService(map)
@@ -177,7 +177,7 @@ class GoogleMaps extends Component {
           }, function (results, status) {
             restaurantResults = results
 
-            //Places results on map
+            //Places inital results on map
             if (status === google.maps.places.PlacesServiceStatus.OK) {
               results.forEach(place => {
                 let marker = new google.maps.Marker({
@@ -205,19 +205,17 @@ class GoogleMaps extends Component {
               const window = document.createElement('div')
               infowindow.setContent(window)
               let place = restaurantResults[markers.findIndex(index => index === marker)]
-              ReactDOM.render(
-                <Restaurant
+              ReactDOM.render(<Restaurant
                   photo={place.photos[0].getUrl()}
                   name={place.name}
                   vicinity={place.vicinity}
                   open_now={place.opening_hours.open_now}
-                />,
-              window)
+              />, window)
               map.panTo(marker.position)
               infowindow.open(map, marker)
               infowindow.addListener('closeclick', function() {
                 map.panTo(results[0].geometry.location)
-                infowindow.close()
+                largeInfowindow = new google.maps.InfoWindow()
               })
             }
           }
@@ -241,7 +239,10 @@ class GoogleMaps extends Component {
               }
             } else {
               showMenu = true
-              ReactDOM.render(<Menu results={restaurantResults} />, controlUI)
+              ReactDOM.render(<Menu 
+                results={restaurantResults}
+                markers={markers}
+              />, controlUI)
             }
           })
         }
