@@ -15,6 +15,7 @@
 
 .menu-scroll {
 	height: calc(100vh - 161px);
+	width: 265px;
 	overflow-y: scroll;
 }
 

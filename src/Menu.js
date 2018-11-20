@@ -8,14 +8,15 @@ class Menu extends Component {
 
   changeMarkers(value) {
     if (value === 'all') {
-      this.setState(state => ({
+      this.setState({
         filteredResults: this.props.results
-      }))
+      }, () => this.props.markers.map(marker => marker.setMap(this.props.map)))
+      
     }
     if (value === 'open') {
-      this.setState(state => ({
-        filteredResults: state.filteredResults.filter((place) => place.opening_hours.open_now)
-      }))
+      this.setState({
+        filteredResults: this.state.filteredResults.filter((place) => place.opening_hours.open_now)
+      }, () => this.props.markers.map(marker => (this.state.filteredResults.some(result => result.name === marker.title)) ? marker.setMap(this.props.map) : marker.setMap(null)))
     }
   }
 

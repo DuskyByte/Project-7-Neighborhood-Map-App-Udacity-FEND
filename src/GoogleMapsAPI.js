@@ -7,7 +7,7 @@ import './App.css'
 let restaurantResults
 let markers = []
 
-class GoogleMaps extends Component {
+class GoogleMapsAPI extends Component {
   loadGoogleMapsAPI() { //Loads the Google Maps API
     if (!this.googleMapsAPI) { //Checks if Google Maps API does not already exsist
       this.googleMapsAPI = new Promise((resolve) => { //Resolves and creates the Google Maps API
@@ -41,7 +41,9 @@ class GoogleMaps extends Component {
           const mapOptions = {
             zoom: 15,
             center: results[0].geometry.location,
-            styles: [ //Custom style for map
+            disableDefaultUI: true,
+            gestureHandling: "none",
+            styles: [//Custom style for map
               {
                 "featureType": "all",
                 "elementType": "geometry",
@@ -156,9 +158,7 @@ class GoogleMaps extends Component {
                   }
                 ]
               }
-            ],
-            disableDefaultUI: true,
-            gestureHandling: "none"
+            ]
           }
 
           //Attaches map
@@ -189,10 +189,10 @@ class GoogleMaps extends Component {
                   title: place.name,
                   map: map
                 })
-                markers.push(marker)
                 marker.addListener('click', function () {
                   fillInfowindow(this, largeInfowindow)
                 })
+                markers.push(marker)
                 return marker
               })
             }
@@ -206,12 +206,8 @@ class GoogleMaps extends Component {
               infowindow.setContent(window)
               let place = restaurantResults[markers.findIndex(index => index === marker)]
               ReactDOM.render(<Restaurant
-                  photo={place.photos[0].getUrl()}
-                  name={place.name}
-                  vicinity={place.vicinity}
-                  open_now={place.opening_hours.open_now}
+                  place={place}
               />, window)
-              map.panTo(marker.position)
               infowindow.open(map, marker)
               infowindow.addListener('closeclick', function() {
                 map.panTo(results[0].geometry.location)
@@ -242,6 +238,7 @@ class GoogleMaps extends Component {
               ReactDOM.render(<Menu 
                 results={restaurantResults}
                 markers={markers}
+                map={map}
               />, controlUI)
             }
           })
@@ -258,4 +255,4 @@ class GoogleMaps extends Component {
   }
 }
 
-export default GoogleMaps
+export default GoogleMapsAPI
