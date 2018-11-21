@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import GoogleMapsAPI from './GoogleMapsAPI.js'
 import './App.css'
 
-const APIKey = 'AIzaSyCWZIi6c-usMI7VtXVz_oo17ru-498r3IM'
+const APIKey = 'AIzaSyCWZIi6c-usMI7VtXVz_oo17ru-498r3IM'//API Key for Google Maps
 const neighborhood = 'Rockwood, Gresham, OR' //Customize your neighborhood
 
 class App extends Component {

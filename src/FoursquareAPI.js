@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import './App.css'
 
-const clientID = 'ZGJ5SQRR42YC2WYU3A5FKXTTVR0VBVEAUKEYAVZ5Q4D0GW0Z'
-const clientSecret = 'LXJSZQP0J0EWB1FRMVHKQLCAJYXG421ZAJL4X4DETCH2QLQV'
+//Keys for Foursquare API
+const clientID = 'WPFVG1B1UG5PZR5GGK0YYJOJD3PXUOL0JTRXZSLVPT2BGU2D'
+const clientSecret = '201KRIC0NNUE24QYCUGFY0MFNJAI3BQPONZ5HMMMIO12BCGX'
 
 class FoursquareAPI extends Component {
   state = {
@@ -12,7 +13,7 @@ class FoursquareAPI extends Component {
 
   componentWillMount() {
     const that = this
-    if (this.state.venue !== this.props.place || this.state.venueRating === 'loading...') {
+    if (this.state.venueRating === 'loading...') {
       fetch('https://api.foursquare.com/v2/venues/explore'+
         '?client_id='+clientID+
         '&client_secret='+clientSecret+

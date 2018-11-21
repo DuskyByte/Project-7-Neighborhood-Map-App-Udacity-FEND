@@ -190,6 +190,7 @@ class GoogleMapsAPI extends Component {
                   map: map
                 })
                 marker.addListener('click', function () {
+                  markers.map(marker => marker.setAnimation(null))
                   fillInfowindow(this, largeInfowindow)
                 })
                 markers.push(marker)
@@ -208,8 +209,10 @@ class GoogleMapsAPI extends Component {
               ReactDOM.render(<Restaurant
                   place={place}
               />, window)
+              marker.setAnimation(google.maps.Animation.BOUNCE)
               infowindow.open(map, marker)
               infowindow.addListener('closeclick', function() {
+                marker.setAnimation(null)
                 map.panTo(results[0].geometry.location)
                 largeInfowindow = new google.maps.InfoWindow()
               })
@@ -231,6 +234,7 @@ class GoogleMapsAPI extends Component {
                 controlUI.innerHTML = 'Menu'
               } else if (event.target.parentNode === document.getElementsByClassName('menu-scroll')[0]) {
                 let index = restaurantResults.findIndex(index => index.name === event.target.innerHTML)
+                markers.map(marker => marker.setAnimation(null))
                 fillInfowindow(markers[index], largeInfowindow)
               }
             } else {
